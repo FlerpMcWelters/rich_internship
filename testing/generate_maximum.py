@@ -1,6 +1,6 @@
 """
 This will run the protocol for a given number of iterations and return
-the lowest value of E-S/n over those iterations.
+the highest value of E-S/n over those iterations.
 Bob will assume that Alice selected the same distribution as him in that
 scenario. We will test the success rate of this strategy calculated as the
 number of times Bob is correct in assuming Alice's distribution is the same
@@ -8,7 +8,7 @@ as his distribution over the total number of iterations.
 
 This differs from the previous protocol in that Bob will not have a threshold
 value that tells Bob whether to pick 1 or 0, he will rather always select the
-bit associated with his distribution and assume that Alice selected the same.
+bit associated with his distribution and assume that Alice selected different.
 """
 
 import numpy as np
@@ -19,7 +19,7 @@ import random
 #k is the number of samples Bob takes
 #protocol_iterations is the number of times we run the protocol
 
-def generate_minimum(mu1, mu2, n, k, protocol_iterations=8):
+def generate_maximum(mu1, mu2, n, k, protocol_iterations=8):
 
     bobLen = protocol_iterations
     listS = [0]*bobLen
@@ -83,17 +83,20 @@ def generate_minimum(mu1, mu2, n, k, protocol_iterations=8):
     
         minIndex = listDiff.index(min(listDiff))
     
-        if bobList[minIndex] == "U" and aliceList[minIndex] == "Distribution 1":
-            return 1
-        elif bobList[minIndex] == "V" and aliceList[minIndex] == "Distribution 2":
-            return 1
-        else:
-            return 0
-        
-def iterateMinimum(mu1, mu2, n, k, total_iterations=1000,protocol_iterations=8):
+    if (bobList[minIndex] == "U") and (aliceList[minIndex] == "Distribution 2"):
+        return 1
+    elif (bobList[minIndex] == "V") and (aliceList[minIndex] == "Distribution 1"):
+        return 1
+    else:
+        return 0
+
+
+#Iterate maximum will execute the protocol a given number of times and return the success rate       
+#recall that n-k is alice's amount.
+def iterateMaximum(mu1, mu2, n, k, protocol_iterations=8,total_iterations=8):
     successCount = 0
     for i in range(total_iterations):
-        successCount += generate_minimum(mu1, mu2, n, k, protocol_iterations)
+        successCount += generate_maximum(mu1, mu2, n, k, protocol_iterations)
     return successCount/total_iterations
 
-iterateMinimum(20000, 20500, 100000, 16, 1000, 8)
+print(iterateMaximum(20000, 20500, 100000, 16, 8, 1000))
