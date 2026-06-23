@@ -29,7 +29,7 @@ num_trials): #Number of iterations to run the experiment
 
     t_value = t(mu1, mu2, n) # Calculate the threshold value
 
-    for i in range(num_trials):
+    for i in range(num_trials): 
         
         S = random.randint(S_start, S_end) # Bob's random number
 
@@ -143,11 +143,12 @@ start_test = 10000
 end_test = 1000000
 num_trials_test = 1000
 
-output_dir = Path(r"/Users/matt/Desktop/rich internship images")
+output_dir = Path(r"/Users/matt/Desktop/rich internship images") 
+#Change directory to whereever you'd like to save images.
 
-x_axis = []
+x_axis = [] #create empty array to store x values (Bob's selection size)
 
-y_axis = []
+y_axis = [] #create empty array to store y values (success rate of protocol based on Bob's selection size)
 
 range_x = np.linspace(2, 7000, 40).round().astype(int) #creates the values tested for each parameter
 
@@ -156,7 +157,7 @@ for x in range_x: #Edit possible x values here!
     y_axis = np.append(y_axis, exponential(n_test, x, mu1_test, mu2_test, t, start_test, end_test, num_trials_test))
     print(f"Bob's selection size: {x}")
     #print(exponential(100000, x, 20000, 20500, t, 10000, 1000000, 2000))
-coeff = np.polyfit(x_axis, y_axis, 1)
+"""coeff = np.polyfit(x_axis, y_axis, 1)
 poly1d_fn = np.poly1d(coeff)
 
 # poly1d_fn is now a function which takes in x and returns an estimate for y
@@ -178,4 +179,4 @@ plt.xlabel("Bob's selection size")
 plt.ylabel("Success rate")
 plt.title(f"Success rate of protocol based on Bob's selection size with threshold value {t(20000, 30000, 100000)}")
 plt.savefig(output_dir / f"t={t_val_test}_n={n_test}_mu1={mu1_test}_mu2={mu2_test}_trials={num_trials_test}.png")
-plt.show()
+plt.show()"""
