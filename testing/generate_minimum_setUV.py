@@ -91,4 +91,5 @@ def iterateMinimum(mu1, mu2, n, k, total_iterations=1000,protocol_iterations=8):
         successCount += generate_minimum(mu1, mu2, n, k, protocol_iterations)
     return successCount/total_iterations
 
-print(iterateMinimum(20000, 20500, 100000, 16, total_iterations=1000, protocol_iterations=8))
+print(iterateMinimum(20000, 50000, 100000, 500, total_iterations=1000, protocol_iterations=32))
+print("complete")

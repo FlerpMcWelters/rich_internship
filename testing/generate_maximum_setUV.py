@@ -12,7 +12,7 @@ import random
 #k is the number of samples Bob takes
 #protocol_iterations is the number of times we run the protocol
 
-def generate_maximum(mu1, mu2, n, k, protocol_iterations=8):
+def generate_maximum(mu1, mu2, n, k, protocol_iterations=8):  #the function takes in the parameters of the distributions, the number of samples, and the number of iterations to run the protocol
 
     bobLen = protocol_iterations
     listS = [0]*bobLen
@@ -91,4 +91,5 @@ def iterateMaximum(mu1, mu2, n, k, total_iterations=1000,protocol_iterations=8):
         successCount += generate_maximum(mu1, mu2, n, k, protocol_iterations)
     return successCount/total_iterations
 
-print(iterateMaximum(20000, 20500, 100000, 16, 1000, 8))
+print(iterateMaximum(20000, 25000, 100000, 64, 1000, 32))
+print("complete")
