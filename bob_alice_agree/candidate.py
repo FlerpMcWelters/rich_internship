@@ -18,8 +18,9 @@ import matplotlib.pyplot as plt
 
 
 n = 100000 #size of Bob and Alice's set
-k = 16 #size of Bob's selection from U
+k = 64 #size of Bob's selection from U
 mu = 20000 #mean of distro 
+mu2 = 50000
 num_trials = 1500
 
 candidate_list_U = []
@@ -30,7 +31,7 @@ U = np.random.exponential(scale=mu, size = 2*k) #Bob's set.
 
 for i in range(num_trials):
     
-    S = random.randint(10000,1000000) #Bob's random number
+    S = random.randint(500000,1000000) #Bob's random number
 
     bobChoice  = random.sample(tuple(U), int(k)) #samples k times from U
 
@@ -132,3 +133,21 @@ for i in range(num_trials):
 
 experimental_threshold_disagree = np.percentile(candidate_list_disagree, 80) #This is the threshold value that gives a success rate of 0.8
 print(f"The 80th percentile for a threshold where they disagree is: {experimental_threshold_disagree}")
+
+print(f"The minimum result for when they disagree was {min(candidate_list_disagree)}")
+print(f"The minimum result for when they agree was {min(candidate_list_U)}")
+print(f"The maximum result for when they disagree was {max(candidate_list_disagree)}")
+print(f"The maximum result for when they agree was {max(candidate_list_U)}")
+"""
+I am interested now in the difference between the 80th percentile when they agree and when they disagree. 
+Obviously the disagree threshold is higher, but how many of those entries are higher than the agree threshold?
+"""
+"""
+comparison = []
+for x in candidate_list_disagree:
+    if x <= experimental_threshold_U:
+        comparison.append(x)
+    else:
+        pass
+
+"""
