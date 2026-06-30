@@ -1,5 +1,4 @@
 """
-Hi Matt,
 
 Here is a procedure that could help determine the threshold experimentally.
 
@@ -15,7 +14,7 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-
+#Everytime this script is run, 
 
 n = 100000 #size of Bob and Alice's set
 k = 64 #size of Bob's selection from U
@@ -31,7 +30,7 @@ U = np.random.exponential(scale=mu, size = 2*k) #Bob's set.
 
 for i in range(num_trials):
     
-    S = random.randint(500000,1000000) #Bob's random number
+    S = random.randint(10000,1000000) #Bob's random number
 
     bobChoice  = random.sample(tuple(U), int(k)) #samples k times from U
 
@@ -82,14 +81,13 @@ print(np.var(experimental_threshold_list))
 """
 
 #We can perform the same computation for distribution 2 if we'd like, and compare.
-mu2 = 30000
 candidate_list_V = []
 V = np.random.exponential(scale=mu2, size = 2*k) #Bob's set.
 for i in range(num_trials):
     
     S = random.randint(10000,1000000) #Bob's random number
 
-    bobChoice  = random.sample(tuple(V), int(k)) #samples k times from U
+    bobChoice  = random.sample(tuple(V), int(k)) #samples k times from V
 
     aliceSum = sum(bobChoice) + S #combines Bob's samples with his private key to be sent to Alice
 
@@ -135,19 +133,52 @@ experimental_threshold_disagree = np.percentile(candidate_list_disagree, 80) #Th
 print(f"The 80th percentile for a threshold where they disagree is: {experimental_threshold_disagree}")
 
 print(f"The minimum result for when they disagree was {min(candidate_list_disagree)}")
-print(f"The minimum result for when they agree was {min(candidate_list_U)}")
+print(f"The minimum result for when they agree (U) was {min(candidate_list_U)}")
 print(f"The maximum result for when they disagree was {max(candidate_list_disagree)}")
-print(f"The maximum result for when they agree was {max(candidate_list_U)}")
+print(f"The maximum result for when they agree (U) was {max(candidate_list_U)}")
+print(f"The minimum result for when they agree (V) is {min(candidate_list_V)}")
+print(f"The maximum result for when they agree (V) is {max(candidate_list_V)}")
 """
 I am interested now in the difference between the 80th percentile when they agree and when they disagree. 
 Obviously the disagree threshold is higher, but how many of those entries are higher than the agree threshold?
 """
-"""
-comparison = []
-for x in candidate_list_disagree:
-    if x <= experimental_threshold_U:
-        comparison.append(x)
-    else:
-        pass
+#With these diagnostics, let's now run the protocol using the experimentally derived thresholds.
+success = 0
+inconclusive = 0
+failure = 0
 
-"""
+for j in range(num_trials):
+    bobGuess = None
+    S = random.randint(10000,1000000) #Bob's random number
+
+    bobChoice  = random.sample(tuple(U), int(k)) #samples k times from U
+
+    aliceSum = sum(bobChoice) + S #combines Bob's samples with his private key to be sent to Alice
+
+    alice_choice = random.choice(["Distribution 1", "Distribution 2"]) #Alice randomly chooses a distribution
+
+    if alice_choice == "Distribution 1":
+        aliceSample = np.random.exponential(scale=mu, size = int(n-k)) #alice fills out the transmission with n-k samples of her distribution
+        A = (aliceSum+sum(aliceSample))/n #Alice takes the mean
+        E = A - mu #Subtracts the mean of her distribution
+    elif alice_choice == "Distribution 2":
+        aliceSample = np.random.exponential(scale=mu2, size = int(n-k)) #alice fills out the transmission with n-k samples of her distribution
+        A = (aliceSum+sum(aliceSample))/n #Alice takes the mean
+        E = A - mu2 #Subtracts the mean of her distribution
+    #This value E is sent back to Bob, who will use the experimentally determined threshold to determine if they agree or not.
+
+    if abs(E-S/n) <= experimental_threshold_U: #Bob uses the threshold derived from when they agree on U
+        bobGuess = "Distribution 1"
+    elif abs(E-S/n) >= experimental_threshold_disagree: #Bob uses the threshold derived from when they disagree
+        bobGuess = "Distribution 2"
+    
+    if bobGuess == alice_choice:
+        success += 1
+    elif (bobGuess != alice_choice) and (bobGuess != None):
+        failure += 1
+    elif bobGuess == None:
+        inconclusive += 1
+    
+print(success/num_trials)
+print(inconclusive/num_trials)
+print(failure/num_trials)
