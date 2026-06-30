@@ -14,7 +14,11 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-#Everytime this script is run, 
+#Every time this script is run, it will generate new threshold values.
+#Then, lines 151-176 will run the protocol using these experimentally derived thresholds, 
+#and print out the success rate, inconclusive rate, and failure rate.
+#Preliminary results suggest that there is still a Signal/Noise ratio problem
+#with the protocol.
 
 n = 100000 #size of Bob and Alice's set
 k = 64 #size of Bob's selection from U
