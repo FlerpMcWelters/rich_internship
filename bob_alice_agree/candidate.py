@@ -22,8 +22,8 @@ import matplotlib.pyplot as plt
 
 n = 100000 #size of Bob and Alice's set
 k = 64 #size of Bob's selection from U
-mu = 20000 #mean of distro 
-mu2 = 50000
+mu = 50000 #mean of distro 
+mu2 = 20000
 num_trials = 1500
 
 candidate_list_U = []
@@ -183,6 +183,6 @@ for j in range(num_trials):
     elif bobGuess == None:
         inconclusive += 1
     
-print(success/num_trials)
-print(inconclusive/num_trials)
-print(failure/num_trials)
+print(f"Success rate: {success/num_trials}")
+print(f"Inconclusive rate: {inconclusive/num_trials}")
+print(f"Failure rate: {failure/num_trials}")
